@@ -1,0 +1,736 @@
+% Modelo para monografia de final de curso, em conformidade
+% com normas da ABNT implementadas pelo projeto abntex2.
+%
+% Este arquivo é fortemente baseado em exemplo distribuído no
+% mesmo projeto. O projeto abntex2 pode ser acessado pela página
+% http://abntex2.googlecode.com/
+%
+% Este arquivo pode ser rodado tanto com o pdflatex quanto com
+% o lualatex.  Como contém referências bibliográficas a serem
+% processadas pelo programa bibtex, este programa deve ser
+% executado. Em resumo, a ordem de execução deve ser:
+% rodar primeiro o pdflatex (ou o lualatex), depois o bibtex e,
+% a seguir, o pdflatex (ou o lualatex ) novamente mais duas vezes,
+% para assegurar que todas as referências bibliográficas e 
+% citações estejam atualizadas.
+%
+% Para adaptar os textos para uso pessoal, usar os comandos
+% imediatamente antes do \begin{document} (iniciando com o
+% comando \titulo).  
+%
+% Este modelo está adaptado para monografias de final de curso
+% em matemática da UFRJ, mas, com o uso das variáveis, pode ser
+% usado para outros tipos de trabalho (mestrado, doutorado),
+% outros cursos, universidades etc.  Caso a adaptação das
+% variáveis não seja suficiente, pode-se alterar os comandos
+% imprimircapa, imprimirfolhaderosto e imprimiraprovação, 
+% fazendo as alterações necessárias.  Como os comandos definidos
+% neste texto usam somente LaTeX, a sua adaptação deve ser 
+% simples, bastando algum conhecimento de LaTeX.
+%
+% O restante do preâmbulo provavelmente  não necessitará ser
+% alterado, a menos, eventualmente, das opções de chamada da
+% classe abntex2, que estão definidas a seguir.
+% 
+\documentclass[
+%article,
+% -- opções da classe memoir que é a classe base da abntex2 --
+% tamanho da fonte
+11pt,
+% capítulos começam em pág ímpar. Insere pág vazia, se preciso
+openright,
+% para imprimir uma página por folha ou visualização em video 
+oneside,
+% frente e verso. Margens das pag. ímpares diferem das pares.
+%  twoside,
+% tamanho do papel. 
+a4paper,
+% Caio - Ocultando bordas horríveis em hiperligações
+hidelinks,
+% -- opções da classe abntex2 --
+% títulos de capítulos convertidos em letras maiúsculas
+%  chapter=TITLE,
+% títulos de seções convertidos em letras maiúsculas
+%  section=TITLE,
+% títulos de subseções convertidos em letras maiúsculas
+%  subsection=TITLE,
+% títulos de subsubseções convertidos em letras maiúsculas
+%  subsubsection=TITLE,
+% -- opções do pacote babel --
+english,   % idioma adicional para hifenização
+portuguese,   % o último idioma é o principal do documento
+oldfontcommands,
+]{abntex2}
+
+% documentação oficial, p. 38
+% reduzir o espaço gigante
+\setlength\afterchapskip{\lineskip}
+
+% --------------------------------------------------------------
+% --------------------------------------------------------------
+% cabeçalho comum para uso com lualatex ou pdflatex
+\usepackage{ifluatex}
+% opções para uso com o lualatex
+\ifluatex
+	\usepackage{fontspec}
+	\defaultfontfeatures{Ligatures=TeX}
+	% o fonte small caps é diferente no latin modern
+	%\fontspec[SmallCapsFont={Latin Modern Roman Caps}]{Latin Modern Roman}
+	% pacotes da AMS 
+	%\usepackage{amsmath,amsthm} 
+	% pacote para fonte específico para símbolos matemáticos
+	%\usepackage{unicode-math}
+	%\setmathfont{Latin Modern Math}
+	% latin modern tem simbolos de mathbb muito feios.
+	%  Trocar o fonte para estes simbolos.
+	%\setmathfont[range=\mathbb]{Tex Gyre Pagella Math}
+	% opções para uso com o pdflatex
+\else
+	\usepackage[utf8x]{inputenc}
+	\usepackage[T1]{fontenc}
+	\usepackage{lmodern}
+	\usepackage{etoolbox}
+	% pacotes da AMS 
+	%\usepackage{amsmath,amssymb,amsthm} 
+	% Mapear caracteres especiais no PDF
+	\usepackage{cmap}
+\fi
+
+% dica de http://latexbr.blogspot.com.br/2012/07/dica-espacamento-entre-linhas.html
+\usepackage{setspace}
+% pacotes usados tanto pelo lualatex quanto pelo pdflatex
+\usepackage{lastpage}    % Usado pela Ficha catalográfica
+\usepackage{indentfirst} % Indenta primeiro parágrafo 
+\usepackage{color}       % Controle das cores
+\usepackage{graphicx}    % Inclusão de gráficos
+\usepackage{wrapfig}    % gráficos ao redor do texto
+% pacote para ajustar os fontes em cada linha de forma a
+% respeitar as margens
+\usepackage{microtype}
+% permite a gravação de texto em um arquivo indicado a partir
+% deste arquivo.  Está sendo usado para criar o arquivo .bib
+% com conteúdo definido neste arquivo, evitando a edição 
+% de um arquivo .bib somente para a bibliografia
+\usepackage{filecontents}
+
+% Caio - preciso de tabelas longas
+\usepackage{longtable}
+
+% Caio - adicionando o pacote hyperref
+\usepackage{hyperref}
+
+\hypersetup{
+	%pagebackref=true,
+	pdftitle={Dissertação}, 
+	pdfauthor={Caio César Carvalho Ortega},
+	pdfsubject={Interpretações do Brasil}, 
+	colorlinks=false,      		% false: boxed links; true: colored links
+	linkcolor=blue,          	% color of internal links
+	citecolor=blue,        		% color of links to bibliography
+	filecolor=magenta,      	% color of file links
+	urlcolor=blue,
+	bookmarksdepth=4
+}
+
+% Caio - separação silábica
+%\hyphenation{}
+
+% Caio - citações mais poderosas
+%\usepackage[autostyle]{csquotes}
+
+%-----------------------------------------------------------
+%-----------------------------------------------------------
+% Caio - habilitar glossário
+\usepackage{glossaries}
+%\makeglossaries
+
+% \newglossaryentry{ex}{name={sample},description={an example}}
+%\newglossaryentry{abl}{
+%	name={ABL},
+%	description={Área Bruta Locável}
+%}
+
+%-----------------------------------------------------------
+%-----------------------------------------------------------
+% Comandos para definir ambientes tipo teorema em português 
+\newtheorem{meuteorema}{Teorema}[chapter]
+\newtheorem{meuaxioma}{Axioma}[chapter]
+\newtheorem{meucorolario}{Corolário}[chapter]
+\newtheorem{meulema}{Lema}[chapter]
+\newtheorem{minhaproposicao}{Proposição}[chapter]
+\newtheorem{minhadefinicao}{Definição}[chapter]
+\newtheorem{meuexemplo}{Exemplo}[chapter]
+\newtheorem{minhaobservacao}{Observação}[chapter]
+%-----------------------------------------------------------
+%-----------------------------------------------------------
+% Pacotes de citações
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}   % Citações padrão ABNT
+%\usepackage[num]{abntex2cite}  % Citações numéricas
+% --- 
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+\renewcommand{\backref}{}
+% Define os textos da citação
+\renewcommand*{\backrefalt}[4]{
+	\ifcase #1 %
+	Nenhuma citação no texto.%
+	\or
+	Citado na página #2.%
+	\else
+	Citado #1 vezes nas páginas #2.%
+	\fi}%
+% --- 
+% --- 
+% Espaço em branco no início do parágrafo
+\setlength{\parindent}{1.3cm}
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+% ---
+% compila o indice, se este for incluído no texto
+\makeindex
+%
+% --------------------------------------------------------- 
+% ---------------------------------------------------------
+% Redefinindo o comando do abntex2 para gerar uma capa 
+\renewcommand{\imprimircapa}{%
+	%   \begin{capa}
+	\begin{flushleft} 
+		{\Large \textsc{\imprimirinstituicao  \\
+				\imprimircurso \\} }
+	\end{flushleft}
+	
+	\vfill
+	\begin{center}
+		{\large \imprimirautor} \\
+		{\Large \textit{\imprimirtitulo}}
+	\end{center}
+	
+	\vfill
+	\begin{center}
+		{\large{\imprimirlocal \\ \imprimirano  }}
+	\end{center}
+	\vspace*{1cm} 
+	%   \end{capa}
+	
+}
+% ---------------------------------------------------------
+% ---------------------------------------------------------
+%
+%
+% ---------------------------------------------------------
+% ---------------------------------------------------------
+% Redefinindo o comando para gerar uma folha de rosto 
+\renewcommand{\imprimirfolhaderosto}{%
+	\begin{center}
+		{\large \imprimirautor}
+	\end{center}
+	\vfill \vfill \vfill \vfill
+	\begin{center}
+		{\Large \textit{\imprimirtitulo}}
+	\end{center}
+	
+	\vfill \vfill \vfill 
+	\begin{flushright} 
+		\parbox{0.5\linewidth}{
+			\imprimirtipotrabalho\, relacionado ao 
+			\imprimircurso\, da \imprimirsigla\, 
+			entregue como parte do
+			processo de graduação para a obtenção do 
+			grau de \imprimirgrau.}
+	\end{flushright} 
+	
+	\vfill 
+	\begin{flushright} 
+		\parbox{0.5\linewidth}{ \imprimirorientadorRotulo 
+			\imprimirorientador\\ \imprimirttorientador}
+	\end{flushright} 
+	
+	\ifdefvoid{\imprimircoorientador}{}{
+		\begin{flushright} 
+			\parbox{0.5\linewidth}{ \imprimircoorientadorRotulo 
+				\imprimircoorientador\\ \imprimirttcoorientador}
+		\end{flushright}
+	}
+	
+	\vfill \vfill \vfill \vfill \vfill \vfill \vfill
+	\begin{center}
+		{\large{\imprimirlocal \\ \imprimirano}}
+	\end{center}
+	\vspace*{1cm} \newpage
+}
+% Final do comando para gerar uma folha de rosto 
+% ---------------------------------------------------------
+% ---------------------------------------------------------
+%
+%
+% ---------------------------------------------------------
+% ---------------------------------------------------------
+% Definindo o comando para gerar uma folha de defesa 
+\newcommand{\imprimirfolhadeaprovacao}{%
+	\begin{center}
+		{\large \imprimirautor}
+	\end{center}
+	\vfill \vfill \vfill \vfill
+	\begin{center}
+		{\Large \textit{\imprimirtitulo}}
+	\end{center}
+	
+	\vfill \vfill \vfill \vfill \vfill \vfill
+	\begin{flushright} 
+		\parbox{0.5\linewidth}{
+%			\imprimirtipotrabalho\,apresentada ao 
+%			\imprimircurso\, da \imprimirsigla\, como requisito
+%			para a obtenção parcial do grau de \imprimirgrau.}
+		}
+	\end{flushright} 
+	\vfill \vfill \vfill \vfill
+	Aprovada em \data.
+	
+	\vfill \vfill \vfill \vfill
+	
+	\begin{center}
+		\textbf{BANCA EXAMINADORA}
+		
+		\vfill\vfill\vfill
+		\rule{10cm}{.1pt}\\
+		{\imprimirexaminadorum} \\ {\imprimirttexaminadorum}
+		
+		\ifdefvoid{\imprimirexaminadordois}{}{
+			\vfill\vfill
+			\rule{10cm}{.1pt}\\
+			\imprimirexaminadordois \\ \imprimirttexaminadordois }
+		
+		\ifdefvoid{\imprimirexaminadortres}{}{
+			\vfill\vfill
+			\rule{10cm}{.1pt}\\
+			\imprimirexaminadortres \\ \imprimirttexaminadortres }
+		
+		\ifdefvoid{\imprimirexaminadorquatro}{}{
+			\vfill\vfill
+			\rule{10cm}{.1pt}\\
+			\imprimirexaminadorquatro \\ \imprimirttexaminadorquatro }
+	\end{center}
+	
+	\vfill \vfill 
+	\begin{center}
+		{\large{\imprimirlocal \\ \imprimirano}}
+	\end{center}
+	\vspace*{1cm} \newpage
+}
+% Final do comando para gerar uma folha de defesa 
+% ---------------------------------------------------------
+% --------------------------------------------------------
+%
+%
+%
+%
+%
+% ---------------------------------------------------------
+% --------------------------------------------------------
+% definindo variáveis adicionais 
+\providecommand{\imprimirsigla}{}
+\newcommand{\sigla}[1]{\renewcommand{\imprimirsigla}{#1}}
+%
+\providecommand{\imprimircurso}{}
+\newcommand{\curso}[1]{\renewcommand{\imprimircurso}{#1}}
+%
+\providecommand{\imprimirano}{}
+\newcommand{\ano}[1]{\renewcommand{\imprimirano}{#1}}
+%
+\providecommand{\imprimirgrau}{}
+\newcommand{\grau}[1]{\renewcommand{\imprimirgrau}{#1}}
+%
+\providecommand{\imprimirexaminadorum}{}
+\newcommand{\examinadorum}[1]{
+	\renewcommand{\imprimirexaminadorum}{#1}}
+%
+\providecommand{\imprimirexaminadordois}{}
+\newcommand{\examinadordois}[1]{
+	\renewcommand{\imprimirexaminadordois}{#1}}
+%
+\providecommand{\imprimirexaminadortres}{}
+\newcommand{\examinadortres}[1]{
+	\renewcommand{\imprimirexaminadortres}{#1}}
+%
+\providecommand{\imprimirexaminadorquatro}{}
+\newcommand{\examinadorquatro}[1]{
+	\renewcommand{\imprimirexaminadorquatro}{#1}}
+%
+\providecommand{\imprimirttorientador}{}
+\newcommand{\ttorientador}[1]{
+	\renewcommand{\imprimirttorientador}{#1}} 
+%
+\providecommand{\imprimirttcoorientador}{}
+\newcommand{\ttcoorientador}[1]{
+	\renewcommand{\imprimirttcoorientador}{#1}}
+%
+\providecommand{\imprimirttexaminadorum}{}
+\newcommand{\ttexaminadorum}[1]{
+	\renewcommand{\imprimirttexaminadorum}{#1}}
+%
+\providecommand{\imprimirttexaminadordois}{}
+\newcommand{\ttexaminadordois}[1]{\renewcommand{
+		\imprimirttexaminadordois}{#1}}
+%
+\providecommand{\imprimirttexaminadortres}{}
+\newcommand{\ttexaminadortres}[1]{
+	\renewcommand{\imprimirttexaminadortres}{#1}}
+%
+\providecommand{\imprimirttexaminadorquatro}{}
+\newcommand{\ttexaminadorquatro}[1]{
+	\renewcommand{\imprimirttexaminadorquatro}{#1}}
+% fim da definição de variáveis adicionais
+% ---------------------------------------------------------
+% ---------------------------------------------------------
+%
+% ---
+% ---
+% ---
+% ---
+% ---
+% ---
+% ---
+% ---
+% ---
+% Informações de dados para CAPA, FOLHA DE ROSTO e FOLHA DE DEFESA
+%
+%----------------- Título e Dados do Autor -----------------
+\titulo{}
+\autor{} 
+%
+
+%----------Informações sobre a Instituição e curso -----------------
+\instituicao{ \\
+	}
+%
+\sigla{UFABC}
+%
+\curso{Bacharelado em Ciências e Humanidades}
+%\curso{Curso de Licenciatura em Matemática}
+%\curso{Mestrado em Ensino de Matemática}
+%\curso{Doutorado em Matemática}
+%
+\local{}
+%
+%
+% -------- Informações sobre o tipo de documento
+\tipotrabalho{}
+%\tipotrabalho{Monografia de final de curso}
+%\tipotrabalho{Dissertação de mestrado}
+%\tipotrabalho{Tese de doutorado}
+%
+\grau{BACHAREL em Ciências Matemáticas e da Terra}
+%\grau{LICENCIADO em Matemática}
+%\grau{MESTRE em Matemática}
+%\grau{DOUTOR em Ciências}
+%
+\ano{}
+\data{} % data da aprovação
+%
+%------Nomes do Orientador, examinadores.  
+\orientador{}
+%\coorientador{Antonio da Silva} % opcional
+\examinadorum{}
+%\examinadordois{Ivo Fernandez Lopez}
+%\examinadortres{Jeferson Leandro Garcia de Araújo}
+%\examinadorquatro{Antonio da Silva}
+%
+%--------- Títulos do Orientador e examinadores ----
+%\ttorientador{Bacharel em Física - UEFS}
+%\ttcoorientador{Doutor em Matemática - UFRJ} 
+%\ttexaminadorum{Doutor em Matemática - UFRJ}
+%\ttexaminadordois{Doutor em Matemática - UFRJ}
+%\ttexaminadortres{Doutor em Matemática - UFRJ}
+%\ttexaminadorquatro{Doutor em Matemática - UFRJ}
+%
+% ---
+% ---
+\begin{document}
+	% ---
+	% Chamando o comando para imprimir a capa
+	%\imprimircapa
+	% ---
+	% ---
+	% Chamando o comando para imprimir a folha de rosto
+	%\imprimirfolhaderosto
+	% ---
+	% ---
+	% Chamando o comando para imprimir a folha de aprovação
+	%\imprimirfolhadeaprovacao
+	% ---
+	% ---
+	% Dedicatória
+	% ---
+%	\begin{dedicatoria}
+%	   \vspace*{\fill}
+%	   \centering
+%	   \noindent
+%	   \textit{} \vspace*{\fill}
+%	\end{dedicatoria}
+%	
+%	
+%	\begin{agradecimentos}
+%	\end{agradecimentos}
+	
+	
+	%
+	%---------------------- EPÍGRAFE I (OPCIONAL)--------------
+	%\begin{epigrafe}
+	%    \vspace*{\fill}
+	%    \begin{flushright}
+	%        \textit{''Texto''\\
+	%        Autor}
+	%    \end{flushright}
+	%\end{epigrafe}
+	%
+	%
+	%
+	%--------Digite aqui o seu resumo em %Português--------------
+	%\begin{resumo}
+	%   Descrição. 
+	%
+	%   \vspace{\onelineskip}
+	%   \noindent
+	%   \textbf{Palavras-chaves}: Palavras.
+	%\end{resumo}
+	
+	
+	%
+	% --- resumo em inglês (abstract) ---
+	%\begin{resumo}[Abstract]
+	%   \begin{otherlanguage*}{english}
+	%      Description.
+	%
+	%      \vspace{\onelineskip}
+	%      \noindent
+	%      \textbf{Keywords}: Words.
+	%   \end{otherlanguage*}
+	%\end{resumo}
+	
+	
+	%
+	%----Sumário, lista de figura e de tabela ------------
+	%\tableofcontents 
+	%\listoffigures
+	%\listoftables
+	%---------------------
+	%--------------Início do Conteúdo---------------------------
+
+	% o comando textual é obrigatório e marca o ponto onde começa 
+	% a imprimir o número da página
+	\textual
+	%
+	%---------------------
+	%
+	
+	\chapter{Bresser Pereira e ``O pacto que não houve''} \label{bresser}
+	
+	\section{Fundamentação} \label{fundamentacao}
+
+	Primordialmente, para iniciar a análise sobre o que levou ao uso da expressão utilizada por Bresser no 22{\textordmasculine} capítulo, de forma a poder compreender seu significado, saliento que o ponto nevrálgico da crítica feita pelo economista diz respeito ao comportamento do câmbio. Para o autor, o governo Lula inicia não com uma ``herança maldita'', como afirmara o então presidente, mas com uma ``herança bendita'': a taxa de câmbio depreciada, que segundo o autor, não apenas possibilitou controle inflacionário a partir da apreciação desta enquanto o país crescia, como também permitiu que o salário mínimo pudesse ser aumentado \cite[p. 344]{Bresser2016}. Porém, \citeonline[p. 361]{Bresser2016} aponta que ``em 1994, o Plano Real pôs fim à alta inflação inercial, mas deixou o país na armadilha dos juros altos e do câmbio sobreapreciado'', ou seja, ainda que a situação em 2002 fosse favorável, ela não era adequada no contexto geral e precisava que ``os preços macroeconômicos'' fossem colocados ``no lugar certo'' \cite[p. 361]{Bresser2016}, algo que não foi feito durante os governos Lula e Dilma.
+
+	A questão cambial é \textit{sine que non} para Bresser, pois outro aspecto importante, que contribuiu para o aprofundamento da crise durante o governo Dilma, é a chamada doença holandesa, conceituada da seguinte maneira:
+	
+	\begin{citacao}
+		``Podemos definir a doença holandesa de maneira muito simples: a doença holandesa é a crônica sobreapreciação da taxa de câmbio de um país causada pela exploração de recursos abundantes e baratos, cuja produção e exportação é compatível com uma taxa de câmbio claramente mais apreciada que a taxa de câmbio que torna competitivas internacionalmente as demais empresas de bens comercializáveis que usam a tecnologia mais moderna existente no mundo. É um fenômeno estrutural que cria obstáculos à industrialização ou, se tiver sido neutralizada e o país se industrializou, mas, depois deixou de sê-lo, provoca desindustrialização.'' \cite[p. 3]{Bresser2009}
+	\end{citacao}
+	
+	Como aponta \citeonline[p. 348-349]{Bresser2016}, a taxa de crescimento foi baixa durante o governo Dilma, resultado da elevação do salário mínimo real e dos demais salários do mercado de trabalho durante os oito anos de governo Lula em conjunto com a sobreapreciação cambial, que por sua vez, foi causada por: ``(1) a falta de neutralização da doença holandesa; (2) seu agravamento (causado pelo aumento dos preços das \textit{commodities}); (3) a política equivocada de crescimento com poupança externa; (4) a política de combater a inflação através de uma âncora cambial; e (5) a política de juros elevados praticados pelo Banco Central para, além de controlar a inflação, atrair capitais e apreciar o real. Resumindo, deveu-se ao populismo cambial''.
+	
+	\citeonline[p. 351]{Bresser2016} é categórico ao afirmar que ``confirmando a verdade mais geral de quanto mais elogiado por Washington e por Nova York for um dirigente de um país de renda média, mais favorável será sua política aos seus competidores ricos e mais prejudicial será ao seu próprio país, Lula passou também a receber amplos elogios enquanto a taxa de câmbio não parava de se apreciar''. A postura criticada por Bresser, no entanto, não se desdobrou sem controvérsias, como a dissociação programática entre os ministérios da Fazenda e o Bacen\footnote{Bacen significa Banco Central; a dissertação emprega tanto Bacen quanto Banco Central}, com políticas claramente díspares a partir da entrada de Guido Mantega no primeiro. \citeonline[p. 351]{Bresser2016} afirma que a ortodoxia do Bacen era tamanha a ponto de ser patética, com a política monetária do Bacen sendo ``consistentemente ortodoxa e contrária aos interesses do país''. As seguintes ações do Ministério da Fazenda, cujas medidas associadas tiveram teor anticíclico, são destacadas pelo autor, que crítico à do Banco Central, reprova a decisão de seguir aumentando a taxa de juros até janeiro de 2009, concluindo que tal atitude contribuiu para a estagnação do PIB brasileiro e para a forte queda na produção industrial \cite[p. 352]{Bresser2016}.	Foram as medidas do Ministério da Fazenda: 
+
+	\begin{itemize}
+		\item Redução de despesas e aumento do gasto público, contemplando: (a) redução dos impostos dos setores de baixa renda; (b) aumento da abrangência do Bolsa Família; (c) redução da carga tributária sobre a indústria automobilística; (d) lançamento do Minha Casa Minha Vida\footnote{Nome do programa de habitação popular subsidiada do Governo Federal} e; (e) redução da meta de superávit primário;
+		\item Face à falta de cooperação do Bacen, interviu no sistema monetário ao capitalizar o BNDES em R\$ 100 bilhões: (a) aumento de recursos para o financiamento de exportações; (b) determinação para aumento dos empréstimos dos bancos oficiais; (c) taxação da circulação de capitais entrantes, impondo o IOF\footnote{Imposto sobre Operações Financeiras} com alíquota de 2\%.
+	\end{itemize}
+	
+	Outros importantes avanços citados por \citeonline[p. 353]{Bresser2016} são: (i) o PAC\footnote{Programa de Aceleração do Crescimento}, no qual ``o país voltou afinal a ter planejamento na área onde ele é realmente necessário --- na infraestrutura e na indústria de base''\cite[p. 353]{Bresser2016} e; (ii) a não adesão à ALCA\footnote{Acordo de Livre Comércio das Américas}, ao condicionar sua adesão a princípios de autonomia, visando reduzir a dependência em relação aos Estados Unidos da América e os países ricos por ele liderados. São avanços dignos de serem citados, mas sem grandes inovações: as políticas social e de direitos humanos.
+	
+	O avanço que não foi feito, porém, foi a depreciação cambial, necessário para conter a sobreapreciação cambial, problema mascarado em 2002 com uma crise de balanço no sistema de pagamentos, que como apontado anteriormente, foi agravado pelo aumento dos salários, pois a produtividade não acompanhou o aumento \cite[p. 355]{Bresser2016}, além do paradoxo do pleno emprego acompanhado de baixíssimas taxas de crescimento\footnote{O que eleva os custos do trabalho, conforme \citeonline[p. 358]{Bresser2016}}, resultando na ``redução da competitividade do país expressa no aumento do déficit em conta-corrente'' \cite[p. 358]{Bresser2016}. Como o governo Dilma (embora a situação se aplicaria a qualquer outro, segundo o autor) não teve forças para fazer a depreciação real necessária \cite[p. 359]{Bresser2016}, o cenário tentou ser combatido por aquele governo a partir da desoneração de encargos trabalhistas e da redução do IPI\footnote{Imposto sobre Produtos Industrializados}, o que não surtiu o efeito desejado devido à ausência de uma taxa de câmbio competitiva \cite[p. 359]{Bresser2016}, por fim, \citeonline[p. 361-362]{Bresser2016} condena a distorção dos preços da energia e gasolina, pois para ele ``segurar os preços das empresas estatais para combater a inflação é uma política inaceitável, como é inaceitável controlar a inflação com âncora cambial''.
+	
+	\section{Conclusão sobre o pacto ilusório}
+	
+	Finalmente, \citeonline[p. 363-364]{Bresser2016} aponta que ``muito se avançou na direção de um novo pacto nacional e popular'', no entanto, o governo e figuras como André Singer, se equivocaram na avaliação da massa proletariada que estava tendo acesso a bens de consumo, ignorando que esta é extremamente pragmática, esperando do governo ``segurança e amplos serviços sociais'', o que inclusive dialoga com a ideia gramsciana de \textbf{grande política}, entendida por Bresser como ``aquela que apresenta alternativas verdadeiras para o eleitor''.
+	
+	O acordo entre a burocracia estatal e o empresariado perdeu força \cite[p. 368]{Bresser2016} com o crescimento tímido e resultados tímidos por parte do receituário anticíclico alicerçado nas empresas estatais, discutido anteriormente. O pacto que não houve, um pacto ilusório, portanto, é, uma vez resumida a análise macroeconômica de \citeonline[p. 370]{Bresser2016}, sintetizado pela seguinte passagem: ``o governo Lula deu os primeiros passos no sentido de construir um acordo nacional-desenvolvimentista, mas não atendeu à condição essencial do novo desenvolvimentismo: manter a taxa de câmbio do país competitiva''. O pacto \textbf{não existiu}, pois o modelo de desenvolvimentismo adotado, que não foi o novo desenvolvimentismo preconizado por \citeonline[p. 370]{Bresser2016}: o governo tentou não cortar os juros, que precisavam ser cortados; manteve o real apreciado, quando a moeda deveria ter sido depreciada; expandiu a despesa pública mantendo a rigidez da meta de controle inflacionário. Como o governo tentou manter uma política que mesclou ortodoxia e desenvolvimentismo com apelo social, acabou por construir uma armadilha, com um modelo de conciliação insustentável, sendo que a depreciação acabou sendo interrompida antes que a taxa de câmbio pudesse estimular o investimento por parte dos empresários, pois novamente os juros subiram, bem como foi feito um ajuste fiscal que, apesar de ter sido incapaz de recuperar a confiança do mercado, contribuiu para erodir o apoio de uma parcela do eleitorado.
+	
+	\chapter{Bloqueios à formação do Brasil}
+	
+%	b) Relacione este conteúdo com os bloqueios à formação do Brasil vistos nas teorias clássicas abordadas no curso.
+%	c) Em que medida estes mesmos temas estão (ou não) presentes no contexto atual, pré eleições de 2018? Aborde a dimensão das estruturas econômicas, das relações entre as classes e o Estado, e a dimensão das formas de sociabilidade no Brasil atual.
+%
+%  Enviar para o email da disciplina (gmail) até o dia 14/Maio, às 16h.
+%
+	
+	Pretendo aqui relacionar a discussão do capítulo \ref{bresser} com as teorias clássicas formuladas por importantes autores do pensamento social brasileiro, os quais foram estudados ao longo do curso.
+	
+	Por questões de espaço e clareza, as formas de sociabilidade e breves colocações sobre o contexto eleitoral de 2018 foram inseridas nas duas dimensões a seguir em detrimento de uma dimensão própria.
+	
+	\section{Dimensão das estruturas econômicas}
+	
+	\citeonline[p. 149]{Fernandes1975} aponta que ``nas `sociedades nacionais' dependentes, de origem colonial, o capitalismo é introduzido antes da constituição da ordem social competitiva. Ele se defronta com estruturas econômicas, sociais e políticas elaboradas sob o regime colonial, apenas parcial e superficialmente ajustadas aos padrões capitalistas de vida econômica'' e especificamente sobre o Brasil, \citeonline[p. 150]{Fernandes1975} aponta que ``nele, as estruturas econômicas, sociais e políticas da sociedade colonial não só moldaram a sociedade nacional subsequente: determinaram, a curto e a largo prazos, as proporções e o alcance dos dinamismos econômicos absorvidos do mercado mundial'', algo que é melhor esclarecido pelo autor quando ele afirma que ``ao contrário de outras burguesias, que forjaram instituições próprias de poder especificamente social e só usaram o Estado para arranjos mais complicados e específicos, a nossa burguesia converge para o Estado e faz sua unificação no plano político, antes de converter a dominação sócio-econômica no que Weber entendia como `poder político indireto'{''} \cite[p. 204]{Fernandes1975}. Trata-se de um ponto de vista que caracterizo como complementar à análise feita na seção \ref{dim_classes}.
+	
+	A passagem a seguir então desdobra qual o efeito de um burguesia que converge para o Estado, fruto de uma aristocracia agrária e que se moderniza quando inevitável, sem  perder a base de poder que antes detinha:
+	
+	\begin{citacao}
+		O efeito mais direto dessa situação é que a burguesia mantém múltiplas polarizações com as estruturas econômicas, sociais e políticas do País. Ela não assume o papel de paladina da civilização ou de instrumento da modernidade, pelo menos de forma universal e como decorrência imperiosa de seus interesses de classe. Ela se compromete, por igual, com tudo que lhe fosse vantajoso: e para ela era vantajoso tirar proveito dos tempos desiguais e da heterogeneidade da sociedade brasileira, mobilizando as vantagens que decorriam tanto do `atraso' quanto do `adiantamento' das populações. Por isso, não era apenas a hegemonia oligárquica que diluía o impacto inovador da dominação burguesa. A própria burguesia como um todo (incluindo-se nela as oligarquias), se ajustara à situação segundo uma linha de múltiplos interesses e de adaptações ambíguas, preferindo a mudança gradual e a composição a uma modernização impetuosa, intransigente e avassaladora. \citeonline[p. 205]{Fernandes1975}
+	\end{citacao}
+	
+	Ora, com a atual tendência de reprimarização da economia, fortalecida, segundo Bresser-Pereira, devido à doença holandesa\footnote{Conceituada na seção \ref{fundamentacao}}, que cria entraves à industrialização e pode chegar a provocar a desindustrialização, considero atual a análise de Florestan Fernandes sobre a burguesia nacional, incluindo a detenção de poder pelo agronegócio\footnote{Para utilizar um termo que considero mais atual}. Não há uma burguesia comprometida com a formulação de um pacto nacional com vistas à industrialização e redução da dependência. Não existia durante o período Lula-Dilma e continua não existindo em 2018, o que representa um pesado desafio a qualquer candidato com pretensões desenvolvimentistas e/ou detentor de uma agenda progressista.
+	
+	\section{Dimensão das relações entre as classes e o Estado} \label{dim_classes}
+	
+	Opto por iniciar a discussão da dimensão que envolve as classes e o Estado para recuperar Sérgio Buarque de Holanda. A obra deste autor faz um apelo contra saídas caudilhescas, ou seja, o autor repudiava um modelo de Estado centrado numa figura concentradora de poder e com forte apelo junto às massas, algo que dialoga com o contexto histórico da obra: a década de 1930 e a existência de figuras como Getúlio Vargas. O fragmento a seguir ilustra tal posição:
+	
+	\begin{citacao}
+		``Essa vitória nunca se consumará enquanto não se liquidem, por sua vez, os fundamentos personalistas e, por menos que o pareçam, aristocráticos, onde ainda assenta nossa vida social. Se o processo revolucionário a que vamos assistindo, e cujas etapas mais importantes foram sugeridas nestas páginas, tem um significado claro, será este o da dissolução lenta, posto que irrevogável, das sobrevivências arcaicas, que o nosso estatuto de país independente até hoje não conseguiu extirpar. Em palavras mais precisas, somente através de um processo semelhante teremos finalmente revogada a velha ordem colonial e patriarcal, com todas as consequências morais, sociais e políticas que ela acarretou e continua a acarretar.'' \cite[p. 180]{Holanda1995}
+	\end{citacao}
+
+	Para Sérgio Buarque de Holanda, romper com as heranças do colonialismo e com o atraso que caracterizava o Brasil exigia não só liquidar com o personalismo, mas impedir que as oligarquias dominantes de então, ligadas ao açúcar, continuassem interligadas ao Estado Brasileiro, se perpetuando no poder e atuando pela manutenção do \textit{status quo}, o que afetava todas as esferas da vida social. Saliento inclusive que, para \citeonline[p. 183]{Holanda1995} a oligarquia ``é o prolongamento do personalismo no espaço e no tempo''. Cabe então recuperar a abordagem feita por \citeonline[p. 59]{Faoro2001}, para o qual ``ao contrário da classe, no estamento não vinga a igualdade das pessoas --- o estamento é, na realidade, um grupo de membros cuja elevação se calca na desigualdade social'', pois ``o estamento supõe distância social e se esforça pela conquista de vantagens materiais e espirituais exclusivas'', ademais, ``a entrada no estamento depende de qualidades que se impõem, que se cunham na \textbf{personalidade}, estilizando-lhe o perfil'' (grifo meu). A velha ordem colonial e patriarcal ainda continua a vigorar; vigorava quando Faoro publicou sua obra e, sem surpresas, continua a vigorar atualmente, sendo oportuno recuperar a caracterização da sociedade colonial feita pelo autor:
+	
+	\begin{citacao}
+		A sociedade colonial não esgota sua caracterização com o quadro administrativo e o estado-maior de domínio, o estamento. Esta minoria comanda, disciplina e controla a economia e os núcleos humanos. Ela vive, mantém-se e se articula sobre uma estrutura de classes, que, ao tempo que influencia o estamento, dele recebe o influxo configurador, no campo político. O patrimonialismo, de onde brota a ordem estamental e burocrática, haure a seiva de uma especial contextura econômica, definida na expansão marítima e comercial de Portugal. A burguesia, limitada na sua vibração e vinculada nos seus propósitos ao rei, foi incapaz, incapaz secularmente, de se emancipar, tutelada de cima e do alto. \cite[p. 242]{Faoro2001}
+	\end{citacao}
+	
+	Ora, ainda que o autor explicite a presença da Coroa Portuguesa ao traçar aquele perfil, \citeonline[p. 866]{Faoro2001} também afirma que ``de Dom João I a Getúlio Vargas, numa viagem de seis séculos, uma estrutura político-social resistiu a todas as transformações fundamentais, aos desafios mais profundos, à travessia do oceano largo. O capitalismo politicamente orientado --- o capitalismo político, ou o pré-capitalismo ---, centro da aventura, da conquista e da colonização moldou a realidade estatal, sobrevivendo, e incorporando na sobrevivência o capitalismo moderno, de índole industrial, racional na técnica e fundado na liberdade do indivíduo — liberdade de negociar, de contratar, de gerir a propriedade sob a garantia das instituições''.
+	
+	Recuperando a tentativa de formação de uma ampla coalizão de interesses nos governos Lula e Dilma, bem como recuperando (i) a dificuldade de contornar uma política monetária ortodoxa, o que inevitavelmente desagradaria os setores rentistas; (ii) além do contorcionismo tentando agradar o funcionalismo público, os assalariados das classes mais baixas e os industriais, significando um controle inflacionário excessivamente rígido e um posterior descolamento entre salário e produtividade, reduzindo a competitividade; (iii) o cenário de crescimento tímido e com pleno emprego, o ponto mais delicado do desgaste da fórmula petista. Os desdobramentos posteriores (\textit{e.g.} a partir \textit{impeachment} de Dilma Rousseff), que não são abordados por Bresser-Pereira, confirmam o que ele próprio chamou de constante ambiguidade das elites \cite[p. 368]{Bresser2016}, bem como uma dependência por parte destas, dificultando a formulação de um novo pacto nacional \cite[p. 363]{Bresser2016}, o que por sua vez, reitera que Holanda e Faoro não estão falando de fantasmas do passado, mas de oligarquias parasitárias absolutamente atuais e que permanecem detendo capital e/ou poder político. Ainda em 2018 qualquer candidato que logre êxito na corrida à presidência da República, precisará encarar as mesmas forças políticas, sociais e mercadológicas que recorrentemente dificultam o surgimento de um Brasil menos desigual e mais desenvolvido, já que não admitem uma desconcentração de poder.
+	
+	
+	% ----------------------------------------------------------
+	% ----------------------------------------------------------
+	\postextual
+	
+	
+	
+	% informa o arquivo com a bibliografia. Deve ser o mesmo nome
+	% (sem o sufixo) que será informado no ambiente filecontents
+	% que está no final deste arquivo. Neste exemplo foi usado 
+	% bibitemp.bib e bibtemp. Este comando insere a bibliografia
+	% nesta posição (antes dos apêndices, anexos, índice remissivo)
+	\bibliography{fontes}
+	% ----------------------------------------------------------
+	% Glossário
+	% ----------------------------------------------------------
+	% Consultar manual da classe abntex2 para orientações sobre o
+	% uso do glossário.
+	%\renewcommand{\glossaryname}{Glossário}
+	%%\renewcommand{\glossarypreamble}{Esta é a descrição do glossário.\\ \\}
+	%\renewcommand*{\glsseeformat}[3][\seename]{\textit{#1}
+	%\glsseelist{#2}}
+
+	% ---
+	% Traduções para o ambiente glossaries
+	% ---
+	\providetranslation{Glossary}{Glossário}
+	\providetranslation{Acronyms}{Siglas}
+	\providetranslation{Notation (glossaries)}{Notação}
+	\providetranslation{Description (glossaries)}{Descrição}
+	\providetranslation{Symbol (glossaries)}{Símbolo}
+	\providetranslation{Page List (glossaries)}{Lista de Páginas}
+	\providetranslation{Symbols (glossaries)}{Símbolos}
+	\providetranslation{Numbers (glossaries)}{Números} 
+	% ---
+	
+	% ---
+	% Imprime o glossário
+	% ---
+	%\cleardoublepage
+	%\phantomsection
+	%\addcontentsline{toc}{chapter}{\glossaryname}
+	%% \glossarystyle{index}
+	%% \glossarystyle{altlisthypergroup}
+	%\glossarystyle{tree}
+	%\printglossaries
+	% ---
+	
+	% ----------------------------------------------------------
+	% Apêndices
+	% ----------------------------------------------------------
+	
+	% ---
+	% Inicia os apêndices. Não esquecer de fechar ao final de
+	% todos os apêndices (\end{apendicesenv})
+	% ---
+	%\begin{apendicesenv}
+	
+	% Imprime uma página indicando o início dos apêndices
+	%\partapendices
+	
+	% ----------------------------------------------------------
+	%\chapter{Primeiro apêndice}
+	% ----------------------------------------------------------
+	
+	%Este é um exemplo de inclusão de capítulos de %apêndice em uma 
+	%monografia.  Cada apêndice é tratado como se fosse %um capítulo.
+	%Os apêndices devem ser iniciados pelo comando de %ambiente
+	%\textbackslash begin\{apendicesenv\} e encerrados %pelo comando 
+	%\textbackslash end\{apendicesenv\}.
+	
+	% ----------------------------------------------------------
+	%\chapter{Segundo apêndice}
+	% ----------------------------------------------------------
+	
+	%Este é um exemplo de inclusão de um segundo apêndice. 
+	
+	%\end{apendicesenv}
+	% ---
+	
+	
+	% ----------------------------------------------------------
+	% Anexos
+	% ----------------------------------------------------------
+	
+	% ---
+	% Inicia os anexos
+	% ---
+	%\begin{anexosenv}
+	
+	% Imprime uma página indicando o início dos anexos
+	%\partanexos
+	
+	% ---
+	%\chapter{Primeiro anexo}
+	% ---
+	%Os anexos são similares aos apêndices se distinguindo pelo fato
+	%que os apêndices são de autoria do autor da monografia e os 
+	%anexos não são da autoria do autor da monografia.  Por exemplo,
+	%se incluir no trabalho um modelo de um formulário preenchido
+	%por alunos participantes de uma pesquisa, este será um apêndice
+	%se o formulário foi criado pelo autor da monografia e será um
+	%anexo se o formulário tiver sido criado por outros (por exemplo,
+	%é um formulário padrão da escola em que o aluno que o preenche
+	%estuda).
+	%
+	%Mesmo que o formulário tenha sido elaborado pela escola, uma
+	%reprodução do formulário preenchido por cada aluno na pesquisa
+	%será incluído no apêndice pois envolve o trabalho do autor da
+	%monografia ao distribuir, coletar e reproduzir as respostas.
+	%
+	%Este é um exemplo de inclusão de capítulos de anexos em uma 
+	%monografia.  Cada anexo é tratado como se fosse um capítulo.
+	%Os anexos devem ser iniciados pelo comando de ambiente
+	%\textbackslash begin\{anexoenv\} e encerrados pelo comando 
+	%\textbackslash end\{anexoenv\}.
+	%
+	%\end{anexosenv}
+	% ---
+	%---------------------------------------------------------------------
+	%---------------------------------------------------------------------
+	
+	%\printindex
+	
+	% Por padrão são incluídas no trabalho somente as referências
+	% citadas ao longo do texto. No comando abaixo foram acrescentadas
+	% algumas referências não citadas (neste texto servem apenas como
+	% exemplos). Não deve ser usado o comando (mais simples) 
+	% \nocite{*}, pois este parece não ser compatível com o
+	% abntex2cite
+	%\nocite{abntex2cite,abntex2wiki,boyer,eves,iezzi,kletenic,
+	%        diomara,steinbruch,intusolatex,feynman,shannon,
+	%        luisfelipe,turing}
+	
+\end{document}
